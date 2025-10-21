@@ -11,6 +11,9 @@ class ChessBoard(Mobject):
         board_size = 6
         square_size = board_size / 8
 
+        self.square_size = square_size
+        self.squares_dict = {}
+
         for rank_index, rank in enumerate(reversed(RANKS)):
             for file_index, file in enumerate(FILES):
                 is_light = (file_index + rank_index) % 2 == 0
@@ -24,4 +27,5 @@ class ChessBoard(Mobject):
                 sq.move_to([x, y, 0])
 
                 squares.add(sq)
+                self.squares_dict[(file, rank)] = sq
         self.add(squares)
