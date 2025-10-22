@@ -1,7 +1,5 @@
 from manim import *
 
-from manim import *
-
 class MinimaxVsAlphaBeta(Scene):
     def construct(self):
         # Step 1: Build a small 2-level tree
@@ -39,20 +37,19 @@ class MinimaxVsAlphaBeta(Scene):
         leaves = [l1, l2, r1, r2]
         leaf_labels = []
         for i, leaf in enumerate(leaves):
-            lbl = Text(str(values[i]), font_size=20).move_to(leaf.get_center())
+            lbl = Text(str(values[i]), font_size=20).move_to(leaf.get_center())  # CENTERED
             leaf_labels.append(lbl)
             self.play(Write(lbl))
 
-        # Animate min-node evaluation (take min of 2,5)
-        left_value = Text("2", font_size=20).next_to(left, UP)
+        # Animate min-node evaluation
+        left_value = Text(str(min(values[0:2])), font_size=20).move_to(left.get_center())
         self.play(Write(left_value))
 
-        # Animate min-node evaluation (take min of 1,4)
-        right_value = Text("1", font_size=20).next_to(right, UP)
+        right_value = Text(str(min(values[2:4])), font_size=20).move_to(right.get_center())
         self.play(Write(right_value))
 
-        # Root (max of left,right = max(2,1) = 2)
-        root_value = Text("2", font_size=20).next_to(root, UP)
+        # Root evaluation
+        root_value = Text(str(max(min(values[0:2]), min(values[2:4]))), font_size=20).move_to(root.get_center())
         self.play(Write(root_value))
 
         # Step 3: Rewind
@@ -67,22 +64,22 @@ class MinimaxVsAlphaBeta(Scene):
             lbl = Text(str(values[i]), font_size=20).move_to(leaf.get_center())
             leaf_labels.append(lbl)
 
-        # First branch: evaluate l1, l2
+        # Evaluate first branch
         self.play(Write(leaf_labels[0]))
         self.play(Write(leaf_labels[1]))
-        left_value = Text("2", font_size=20).next_to(left, UP)
+        left_value = Text(str(min(values[0:2])), font_size=20).move_to(left.get_center())
         self.play(Write(left_value))
 
-        # Move to right branch: evaluate r1
+        # Evaluate second branch
         self.play(Write(leaf_labels[2]))
-        right_value = Text("1", font_size=20).next_to(right, UP)
+        right_value = Text(str(min(values[2:4])), font_size=20).move_to(right.get_center())
         self.play(Write(right_value))
 
-        # Now prune r2
+        # Prune r2
         self.play(leaves[3].animate.set_fill(RED, opacity=0.5))
         self.play(Indicate(leaves[3]))
         self.play(FadeIn(Text("Pruned!", font_size=20).next_to(leaves[3], DOWN)))
 
         # Root result
-        root_value = Text("2", font_size=20).next_to(root, UP)
+        root_value = Text(str(max(min(values[0:2]), min(values[2:4]))), font_size=20).move_to(root.get_center())
         self.play(Write(root_value))
