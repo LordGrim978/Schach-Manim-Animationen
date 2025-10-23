@@ -21,7 +21,7 @@ class ChessBoard(Mobject):
         self.square_size = square_size
         self.squares_dict = {}
 
-        for rank_index, rank in enumerate(reversed(RANKS)):
+        for rank_index, rank in enumerate(RANKS):
             for file_index, file in enumerate(FILES):
                 is_light = (file_index + rank_index) % 2 == 1
                 color = "#f0d9b5" if is_light else "#b58863"
@@ -42,3 +42,10 @@ class ChessBoard(Mobject):
         if not square:
             raise Exception(f"Attempted to select invalid square: `{square_index}`")
         return square.get_center()
+    
+    def highlight_square(self, square: SquareIndex, highlight_color: ManimColor, board_scale: float = 1.0) -> Animation:
+        highlight = Square(side_length=self.square_size * board_scale)
+        highlight.move_to(self.get_square_position(square))
+        highlight.set_stroke(highlight_color, width=4)
+        highlight.set_fill(highlight_color, opacity=0.25)
+        return Create(highlight)

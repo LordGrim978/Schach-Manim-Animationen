@@ -46,12 +46,12 @@ def get_piece_mobject(piece_type: PieceType, piece_color: PieceColor) -> SVGMobj
     return SVGMobject(svg_path)
 
 def get_piece_list_from_fen(fen: str) -> list[tuple[SquareIndex, PieceType, PieceColor]]:
-    rank: int = 1
+    rank: int = 8
     file: int = 1 # 1 is the A file
     FILE_NAMES = ["a", "b", "c", "d", "e", "f", "g", "h"]
     index: int = 0
     result: list[tuple[SquareIndex, PieceType, PieceColor]] = []
-    while True:
+    while index < len(fen):
         char: str = fen[index]
         if char.isalpha():
             piece_color: PieceColor = PieceColor.LIGHT if char.upper() == char else PieceColor.DARK
@@ -60,13 +60,13 @@ def get_piece_list_from_fen(fen: str) -> list[tuple[SquareIndex, PieceType, Piec
             file += 1
         elif char == "/":
             file = 1
-            rank += 1
+            rank -= 1
         elif char == " ":
             # Space is between position and other info (castle rights, etc.)
             break
         else:
             file += int(char)
         index += 1
-        if rank > 8:
+        if rank < 1:
             break
     return result

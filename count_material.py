@@ -49,7 +49,10 @@ class CountMaterial(Scene):
             return value if piece_color == PieceColor.LIGHT else -value
         piece = get_piece_mobject(piece_type, piece_color)
         piece._value = get_piece_value(piece_type, piece_color)
-        piece.set_height(self.board.square_size * 0.8 * self.scale_factor)
+        if piece_type == PieceType.PAWN:
+            piece.set_height(self.board.square_size * 0.70 * self.scale_factor)
+        else:
+            piece.set_height(self.board.square_size * 0.75 * self.scale_factor)
         piece.move_to(self.board.get_square_position(square))
         self.all_pieces_group.add(piece)
         return piece
