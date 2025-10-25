@@ -10,6 +10,7 @@ RANKS = list(range(1, 9))
 class ChessBoard(Mobject):
     square_size: float
     squares_dict: dict[SquareIndex, Square]
+    highlight_dict: dict[SquareIndex, Square]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -20,6 +21,7 @@ class ChessBoard(Mobject):
 
         self.square_size = square_size
         self.squares_dict = {}
+        self.highlight_dict = {}
 
         for rank_index, rank in enumerate(RANKS):
             for file_index, file in enumerate(FILES):
@@ -48,4 +50,18 @@ class ChessBoard(Mobject):
         highlight.move_to(self.get_square_position(square))
         highlight.set_stroke(highlight_color, width=4)
         highlight.set_fill(highlight_color, opacity=0.25)
-        return Create(highlight)
+        self.highlight_dict[square] = highlight
+        return FadeIn(highlight)
+    
+    def unhighlight_square(self, square: SquareIndex, board_scale: float = 1.0, do_not_delete: bool = False) -> Animation:
+        highlight = self.highlight_dict.get(square)
+        if not highlight:
+            raise Exception(f"Unable to unhighlight square {square}: There was no highlight")
+        if not do_not_delete:
+            del self.highlight_dict[square]
+        return FadeOut(highlight)
+    
+    def unhighlight_all(self, board_scale: float = 1.0) -> list[Animation]:
+        animations = [self.unhighlight_square(square, board_scale, do_not_delete=True) for square in self.highlight_dict]
+        self.highlight_dict = {}
+        return animations
