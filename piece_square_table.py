@@ -79,11 +79,11 @@ class PieceSquareTable(Scene):
         self.play(LaggedStart(animations, lag_ratio=0.05))
         
         self.play(self.board.highlight_square(("c", 3), GREEN), self.board.highlight_square(("h", 6), RED))
-        # self.wait(10) # uncomment for final render
+        self.wait(5)
 
         HIGHLIGHT_SQUARES_GREEN = [("a", 2), ("a", 4), ("b", 1), ("b", 5), ("d", 1), ("d", 5), ("e", 2)]
         self.play(LaggedStart([self.board.highlight_square(square, GREEN) for square in HIGHLIGHT_SQUARES_GREEN], lag_ratio=0.15))
-        # self.wait(3) # uncomment for final render
+        self.wait(3)
         HIGHLIGHT_SQUARES_RED = [("g", 8), ("g", 4), ("f", 5)]
         self.play(LaggedStart([self.board.highlight_square(square, RED) for square in HIGHLIGHT_SQUARES_RED], lag_ratio=0.15))
         
@@ -96,6 +96,34 @@ class PieceSquareTable(Scene):
         self.psqt = PieceSquareTableMobject(read_file_to_string("psqt/knight.txt"))
         self.play(Transform(self.board, self.psqt))
         self.wait()
+
+        self.next_section("demonstarate sum")
+        self.play(self.board.animate.shift(LEFT * 3), self.piece_map[("c", 3)].animate.shift(LEFT * 3))
+        
+        equation: VGroup = VGroup()
+        placeholder_knight: Square = Square(side_length=self.board.square_size * 0.75)
+        equation.add(placeholder_knight)
+        plus: Text = Text("+").next_to(placeholder_knight.get_right())
+        equation.add(plus)
+        placeholder_square: Square = Square(side_length=self.board.square_size).next_to(plus.get_right())
+        equation.add(placeholder_square)
+        equals: Text = Text("=").next_to(placeholder_square.get_right())
+        equation.add(equals)
+        equation.shift(RIGHT * 3)
+        self.play(FadeIn(plus, equals))
+
+        self.play(self.piece_map[("c", 3)].animate.move_to(placeholder_knight.get_center()))
+        self.play(self.psqt.squares_dict[("c", 3)].animate.move_to(placeholder_square.get_center()))
+
+        self.wait(1)
+
+        self.play(
+            Transform(self.piece_map[("c", 3)], Text("3").move_to(placeholder_knight.get_center())),
+            Transform(self.psqt.squares_dict[("c", 3)], Text("0.1").move_to(placeholder_square.get_center()))
+        )
+        result = Text("3.1").next_to(equals.get_right())
+        self.play(FadeIn(result))
+        self.wait(1)
 
     def place_pieces(self, fen: str) -> list[Animation]:
         piece_list: list[tuple[SquareIndex, PieceType, PieceColor]] = (
