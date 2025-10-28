@@ -78,7 +78,6 @@ class MinimaxVsAlphaBeta(Scene):
         # Prune r2
         self.play(leaves[3].animate.set_fill(RED, opacity=0.5))
         self.play(Indicate(leaves[3]))
-        self.play(FadeIn(Text("Pruned!", font_size=20).next_to(leaves[3], DOWN)))
 
         # Root result
         root_value = Text(str(max(min(values[0:2]), min(values[2:4]))), font_size=20).move_to(root.get_center())
