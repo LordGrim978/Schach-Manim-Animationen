@@ -9,7 +9,7 @@ def read_file_to_string(filepath: str) -> str:
 
 class PieceSquareTableMobject(Mobject):
     """
-    The Mobject for visualizing a piece square table. Please not that only
+    The Mobject for visualizing a piece square table. Please note that only
     values between -50 and 50 are supported
     """
     square_size: float
