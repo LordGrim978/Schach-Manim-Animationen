@@ -34,7 +34,7 @@ class CountMaterial(Scene):
         self.wait(1)
         self.count_pieces()
         self.wait(1)
-    
+
     def get_placed_piece_mobject(self, square: SquareIndex, piece_type: PieceType, piece_color: PieceColor):
         def get_piece_value(piece_type: PieceType, piece_color: PieceColor):
             PIECE_TYPE_TO_VALUE_MAP = {
@@ -56,7 +56,7 @@ class CountMaterial(Scene):
         piece.move_to(self.board.get_square_position(square))
         self.all_pieces_group.add(piece)
         return piece
-    
+
     def place_many_pieces(self, piece_list: list[tuple[SquareIndex, PieceType, PieceColor]]):
         animations = [FadeIn(self.get_placed_piece_mobject(square, piece_type, piece_color))
             for (square, piece_type, piece_color) in piece_list]
@@ -77,7 +77,6 @@ class CountMaterial(Scene):
                     self.material_counter.tracker.set_value(
                         self.material_counter.tracker.get_value() + piece._value
                     )
-
 
             return UpdateFromAlphaFunc(piece, update_func, run_time=1)
         

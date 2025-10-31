@@ -41,9 +41,32 @@ COLOR_TO_LETTER_MAP: dict[PieceColor, str] = {
 def get_piece_mobject(piece_type: PieceType, piece_color: PieceColor) -> SVGMobject:
     piece_name = TYPE_TO_NAME_MAP[piece_type]
     piece_color_string = COLOR_TO_LETTER_MAP[piece_color]
-
     svg_path = f"images/{piece_name}_{piece_color_string}t"
-    return SVGMobject(svg_path)
+
+    mobj = SVGMobject(svg_path)
+
+    # Force correct base colors
+    if piece_color == PieceColor.DARK:
+        # All dark pieces should be solid black with white highlights on top
+        for sub in mobj.submobjects:
+            sub.set_fill(color=BLACK, opacity=1)
+            if sub.get_stroke_color() == WHITE:
+                sub.set_z_index(2)  # ensure highlight is above the fill
+            else:
+                sub.set_stroke(color=BLACK, opacity=1)
+                sub.set_z_index(1)
+    else:
+        for sub in mobj.submobjects:
+            sub.set_fill(color=WHITE, opacity=1)
+            if sub.get_stroke_color() == BLACK:
+                sub.set_z_index(2)
+            else:
+                sub.set_stroke(color=WHITE, opacity=1)
+                sub.set_z_index(1)
+
+    mobj.suspend_updating()
+    return mobj
+
 
 def get_piece_list_from_fen(fen: str) -> list[tuple[SquareIndex, PieceType, PieceColor]]:
     rank: int = 8
